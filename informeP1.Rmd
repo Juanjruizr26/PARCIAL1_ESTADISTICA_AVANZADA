@@ -1,0 +1,129 @@
+---
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+# PARCIAL 1
+
+Juan José Ruiz Ruiz - ID:8959602
+
+# 1. Web Scraping
+
+Para la primera parte, vamos a generar una base de datos con la información que se encuentra en el portal de **carroya** a través del Web scraping de Gooogle.
+
+El tipo de carro de interés es un KIA, linea picanto, desde el año 2010 hasta el año 2024.
+
+Enlace del sitio web: <https://www.carroya.com/automoviles-y-camionetas/kia/picanto?page=3&modelRange=2010-2024>
+
+Para la extracción de datos, las variables que se seleccionaron fueron: - Precio.
+- Año.
+- Kilometraje.
+- Ciudad.
+- Característica.
+
+## Base de datos
+
+En total se lograron tener 276 registros.
+
+Ya con los datos en un archivo .xlsx, procederemos a revisar, en que no hayan datos faltantes, modificar las variables, eliminar registros, entre otros.
+
+Por fortuna, no se encontraron registros faltantes.
+No obstante, se encontraron tres valores de los precios muy alto (105,85 y 80 millones), que eran de unos carros de servicio de transporte público, por lo cual se decidió eliminar dichos registros, ya que el precio dependerá de otros factores.
+
+Al final las variables que resultaron en nuestra base de datos fueron:
+
+-   Precio en millones de peso.
+-   Antiguedad (Año 2024- Año del vehículo) en años.
+-   Kilometraje en miles de kilometros.
+
+Con un registro de 276 registros.
+
+# 2. Exploración de los datos
+
+![](images/paste-6E2B78D7.png)
+
+Según los datos presentados en la tabla, el precio medio de los automóviles es de 48.2 millones de pesos, con una desviación estándar de 10.4 millones de pesos.
+Observando el conjunto, se constata que el 50% de los vehículos tiene un precio que excede los 48.3 millones de pesos.
+Dentro de este rango, el vehículo más económico está valorado en 16 millones de pesos, en contraste con el automóvil de mayor costo, cuyo precio asciende a 76 millones de pesos.
+
+Por otra parte, en relación a la antigüedad, se observa que la media es de 4.24 años, con una desviación estándar de 3.19 años.
+Estos valores sugieren que los carros listados en la página no presentan una antigüedad significativamente alta.
+Es importante resaltar que la mitad de los automóviles muestra una antigüedad superior a los 4 años, indicando que la mayoría son relativamente recientes en términos de años.
+
+Por último, en lo que respecta al kilometraje, se observa que los Kia Picanto disponibles en la página han recorrido un promedio de 39.3 miles de kilómetros, con una desviación de 34.1 miles de kilómetros.
+Esto sugiere una variabilidad considerable en la cantidad de kilómetros recorridos.
+Además, el 50% de los automóviles presenta un kilometraje inferior a 32 miles de kilómetros.
+
+# 3. Modelos de regresión
+
++-------------+----------------+-----------------------+-------------+
+| Respuesta   | Variables      | Modelo                | $$          |
+|             |                |                       | R^2         |
+|             |                |                       | $$          |
++=============+================+=======================+=============+
+| **Precio**  | **Antiguedad** | **Intercepto: 60.02** | **0.746**   |
+|             |                |                       |             |
+|             |                | **Pendiente:-2.81**   |             |
++-------------+----------------+-----------------------+-------------+
+| Precio      | Kilometraje    | Intercepto:57.        | 0.586       |
+|             |                |                       |             |
+|             |                | Pendiente:-0.23       |             |
++-------------+----------------+-----------------------+-------------+
+| Precio      | Antiguedad     | Intercepto: 60.19     | 0.76        |
+|             |                |                       |             |
+|             | Kilometraje    | Kilometraje: -2.31    |             |
+|             |                |                       |             |
+|             |                | Antiguedad: -0.06     |             |
++-------------+----------------+-----------------------+-------------+
+
+El modelo que se tomará es:
+
+$$
+y(x) = 60.02 - 2.81(x)
+$$
+
+donde:
+
+$$
+y: precio \\
+x: antiguedad\\
+$$
+
+![](images/paste-81ECE181.png)
+
+El modelo explica el 74.6% de las variaciones del precio respecto a la antiguedad.
+
+El intercepto significa que, cuando la antiguedad del carro es 0, el precio es de 60.02 millones de pesos.
+
+$x$ representa que por cada año de antiguedad, el precio del carro disminuye en -2.31 millones de pesos.
+
+# 4. Poder predictivo del modelo
+
+Para este punto, vamos a utilizar validación cruzada.
+
+El error absoluto medio (MAE) fue de 4.24, es decir que el modelo se equivoca en 4.24 millones de pesos al estimar el precio de un carro.
+
+Ahora, de acuerdo con el MAPE, las prediciones del modelo tienen un error del 8.80% en comparación con los valores reales.
+Este valor, indica que el modelo hace buenas predicciones de acuerdo con la antiguedad de un vehículo.
+
+# 5. Aplicaciones
+
+El modelo se podría utilizar en las siguientes situaciones:
+
+-   Ofrecer una recomendación de precio de venta: Cuando alguien se encuentre indeciso acerca del precio adecuado para vender su Kia Picanto, es posible proporcionar una sugerencia de valor competitivo y atractivo.
+
+    $$
+    y(5) = 60.02-2.81(5)\\
+    y(5) = 45.97
+    $$
+
+-   Aprovechar oportunidades económicas: Si un vehículo está siendo ofertado en la página a un precio inferior a la estimación del modelo, esta situación podría representar una oportunidad favorable para adquirir un automóvil atractivo y con una buena relación calidad-precio.
+
+-   Evaluar la conveniencia de una adquisición: En el caso de que un vehículo se encuentre con un precio superior a la estimación del modelo, es prudente considerar otras opciones de compra en lugar de adquirirlo.
+    Esto permite tomar decisiones informadas y evitar inversiones que no se ajusten a las expectativas económicas.
+
+    -   $$
+        y(9) = 60.02-2.81(9)\\
+        y=34.73 
+        $$
